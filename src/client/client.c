@@ -14,20 +14,17 @@
 
 void	send_signal(int pid, unsigned char c)
 {
-	int				i;
-	unsigned char	temp;
+	int	i;
 
-	i = 8;
-	temp = c;
-	while (i > 0)
+	i = 0;
+	while (i < 8)
 	{
-		i--;
-		temp = c >> i;
-		if (temp % 2 == 0)
-			kill(pid, SIGUSR2);
-		else
+		if ((c >> i) & 1)
 			kill(pid, SIGUSR1);
-		usleep(69);
+		else
+			kill(pid, SIGUSR2);
+		usleep(300);
+		i++;
 	}
 }
 

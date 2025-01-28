@@ -18,7 +18,7 @@ void	handler(int signal)
 	static int				i = 0;
 
 	if (signal == SIGUSR1)
-		c |= (1 << (7 - i));
+		c |= (1 << i);
 	i++;
 	if (i == 8)
 	{
