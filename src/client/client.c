@@ -33,7 +33,7 @@ void	send_signal(int pid, unsigned char c)
 
 int	main(int argc, char *argv[])
 {
-	int		i;
+	int			i;
 	const char	*str;
 	pid_t		pid;
 
