@@ -14,22 +14,21 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-# Directories
-CLNDIR = src/client
-SRVDIR = src/server
-OBJDIR = objects
-INCDIR = include
+# Sources & Directories
+CLIENT = src/client/client.c
+CLIBON = src/client/client_bonus.c
+SERVER = src/server/server.c
+SERBON = src/client/server_bonus.c
+OBJECT = objects
+INCLUD = include
 LIBFTDIR = libft
 LIBFT = $(LIBFTDIR)/libft.a
 
-# Source files and object files
-SRCS	=	$(CLNDIR)/client.c \
-			$(SRVDIR)/server.c
-			
-OBJS = $(SRCS:src/%/%.c=$(OBJDIR)/%.o)
-
-# Name
-NAME = minitalk
+# Names
+CLIENT_NAME = client
+SERVER_NAME = server
+CLIBON_NAME = client_bonus
+SERBON_NAME = server_bonus
 
 # Colors for output
 GREEN		=	\033[0;32m
@@ -37,30 +36,28 @@ ORANGE	=	\033[38;5;214m
 GRAY		=	\033[0;90m
 
 # Rules
-all: $(LIBFT) $(NAME)
+all: $(LIBFT) $(CLIENT_NAME) $(SERVER_NAME)
 
-$(NAME): $(OBJS)
-	@$(CC) $(CFLAGS) $(OBJS) -I$(INCDIR) -L$(LIBFTDIR) -lft -o $(NAME)
-	@echo "$(GREEN)$(NAME) has been created."
-	
-$(OBJDIR)/%.o: %.c
-	@mkdir -p $(dir $@)
-	@$(CC) $(CFLAGS) -I$(INCDIR) -I$(LIBFTDIR) -c $< -o $@
-	@echo "$(GRAY)Compiled: $<"
+$(CLIENT_NAME): $(CLIENT) $(LIBFT)
+	@$(CC) $(CFLAGS) $(CLIENT) -I$(INCLUD) -L$(LIBFTDIR) -lft -o $(CLIENT_NAME)
+	@echo "$(GREEN)$(CLIENT_NAME) has been created."
+
+$(SERVER_NAME): $(SERVER) $(LIBFT)
+	@$(CC) $(CFLAGS) $(SERVER) -I$(INCLUD) -L$(LIBFTDIR) -lft -o $(SERVER_NAME)
+	@echo "$(GREEN)$(SERVER_NAME) has been created."
 	
 $(LIBFT):
 	@make -C $(LIBFTDIR)
-	@echo "$(GREEN)Libft has been created."
 
 clean:
-	@rm -rf $(OBJDIR)
+	@rm -rf $(LIBFTDIR)/*.o
 	@make -C $(LIBFTDIR) clean
-	@echo "$(ORANGE)Objects have been removed."
 
 fclean: clean
-	@rm -f $(NAME)
-	@make -C $(LIBFTDIR) fclean
-	@echo "$(ORANGE)$(NAME) has been removed."
+	@rm -rf $(LIBFT)
+	@rm -rf $(CLIENT_NAME)
+	@rm -rf $(SERVER_NAME)
+	@echo "$(ORANGE)All targets have been removed."
 
 re: fclean all
 
