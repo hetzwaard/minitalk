@@ -6,7 +6,7 @@
 /*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/26 08:02:09 by mahkilic      #+#    #+#                 */
-/*   Updated: 2025/01/29 14:45:09 by mahkilic      ########   odam.nl         */
+/*   Updated: 2025/01/29 14:50:34 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,5 @@ int	main(void)
 	write(1, "Server is running...\n", 21);
 	while (1)
 		pause();
-	return (EXIT_SUCCESS);
+	return (0);
 }
