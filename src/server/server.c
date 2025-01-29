@@ -6,11 +6,11 @@
 /*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/26 08:02:09 by mahkilic      #+#    #+#                 */
-/*   Updated: 2025/01/26 08:23:39 by mahkilic      ########   odam.nl         */
+/*   Updated: 2025/01/29 14:45:09 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/minitalk.h"
+#include "../../include/minitalk.h"
 
 void	handler(int signal)
 {
@@ -23,13 +23,9 @@ void	handler(int signal)
 	if (i == 8)
 	{
 		if (c == '\0')
-		{
 			ft_printf("\n");
-		}
 		else
-		{
 			ft_printf("%c", c);
-		}
 		i = 0;
 		c = 0;
 	}
