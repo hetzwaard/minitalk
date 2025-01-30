@@ -15,9 +15,8 @@
 
 # include "../libft/include/libft.h"
 # include <signal.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
+# include <stdbool.h>
 # include <sys/types.h>
+# include <unistd.h>
 
 #endif
