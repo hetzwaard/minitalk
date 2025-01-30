@@ -6,7 +6,7 @@
 /*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/26 07:59:32 by mahkilic      #+#    #+#                 */
-/*   Updated: 2025/01/29 14:43:27 by mahkilic      ########   odam.nl         */
+/*   Updated: 2025/01/30 01:41:11 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	send_signal(int pid, unsigned char c)
 			kill(pid, SIGUSR1);
 		else
 			kill(pid, SIGUSR2);
-		usleep(300);
+		usleep(100);
 		i++;
 	}
 }
