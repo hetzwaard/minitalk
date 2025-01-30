@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   server.c                                           :+:    :+:            */
+/*   server_bonus.c                                     :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
+/*   By: mahkilic <mahkilic@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2025/01/26 08:02:09 by mahkilic      #+#    #+#                 */
-/*   Updated: 2025/01/29 14:50:34 by mahkilic      ########   odam.nl         */
+/*   Created: 2025/01/30 12:35:30 by mahkilic      #+#    #+#                 */
+/*   Updated: 2025/01/30 12:35:30 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,16 @@ void	handler(int signal, siginfo_t *info, void *context)
 	if (i == 8)
 	{
 		if (c == '\0')
+		{
 			write(1, "\n", 1);
+			kill(info->si_pid, SIGUSR2);
+		}
 		else
 			write(1, &c, 1);
 		i = 0;
 		c = 0;
 	}
-	usleep(69);
+	usleep(50);
 	kill(info->si_pid, SIGUSR1);
 }
 
