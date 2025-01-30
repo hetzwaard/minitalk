@@ -18,7 +18,7 @@ CFLAGS = -Wall -Wextra -Werror
 CLIENT = src/client/client.c
 CLIBON = src/client/client_bonus.c
 SERVER = src/server/server.c
-SERBON = src/client/server_bonus.c
+SERBON = src/server/server_bonus.c
 OBJECT = objects
 INCLUD = include
 LIBFTDIR = libft
@@ -49,6 +49,16 @@ $(SERVER_NAME): $(SERVER) $(LIBFT)
 $(LIBFT):
 	@make -C $(LIBFTDIR)
 
+bonus: $(LIBFT) $(CLIBON_NAME) $(SERBON_NAME)
+
+$(CLIBON_NAME): $(CLIBON) $(LIBFT)
+	@$(CC) $(CFLAGS) $(CLIBON) -I$(INCLUD) -L$(LIBFTDIR) -lft -o $(CLIBON_NAME)
+	@echo "$(GREEN)$(CLIBON_NAME) has been created."
+
+$(SERBON_NAME): $(SERBON) $(LIBFT)
+	@$(CC) $(CFLAGS) $(SERBON) -I$(INCLUD) -L$(LIBFTDIR) -lft -o $(SERBON_NAME)
+	@echo "$(GREEN)$(SERBON_NAME) has been created."
+
 clean:
 	@rm -rf $(LIBFTDIR)/*.o
 	@make -C $(LIBFTDIR) clean
@@ -56,7 +66,9 @@ clean:
 fclean: clean
 	@rm -rf $(LIBFT)
 	@rm -rf $(CLIENT_NAME)
+	@rm -rf $(CLIBON_NAME)
 	@rm -rf $(SERVER_NAME)
+	@rm -rf $(SERBON_NAME)
 	@echo "$(ORANGE)All targets have been removed."
 
 re: fclean all
