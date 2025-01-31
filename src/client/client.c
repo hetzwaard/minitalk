@@ -46,11 +46,10 @@ int	main(int argc, char *argv[])
 
 	i = 0;
 	if (argc != 3)
-	{
-		ft_printf("Usage: ./client [PID] [STRING]\n");
-		return (1);
-	}
+		return (write(1, "Usage: ./client [PID] [STRING]\n", 31), 1);
 	pid = ft_atoi(argv[1]);
+	if (pid <= MIN_PID || pid >= MAX_PID)
+		return (write(1, "Error: Invalid PID.\n", 20), 1);
 	str = argv[2];
 	signal(SIGUSR1, ack_handler);
 	while (str[i])
