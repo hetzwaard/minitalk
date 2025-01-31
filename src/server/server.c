@@ -24,7 +24,7 @@ void	handler(int signal, siginfo_t *info, void *context)
 	if (i == 8)
 	{
 		if (c == '\0')
-			write(1, "\n", 1);`
+			write(1, "\n", 1);
 		else
 			write(1, &c, 1);
 		i = 0;

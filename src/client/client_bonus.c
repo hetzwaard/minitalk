@@ -12,12 +12,6 @@
 
 #include "../../include/minitalk.h"
 
-// g_ack is a global variable to store the ack signal
-// g_ack = 0 means no signal received
-// g_ack = 1 means SIGUSR1 received
-// g_ack = 2 means server confirmed the entire message is recieved
-// volatile means the variable can be changed by the signal handler
-
 volatile int	g_ack = 0;
 
 void	ack_handler(int signum)
