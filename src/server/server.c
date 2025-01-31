@@ -24,7 +24,7 @@ void	handler(int signal, siginfo_t *info, void *context)
 	if (i == 8)
 	{
 		if (c == '\0')
-			write(1, "\n", 1);
+			write(1, "\n", 1);`
 		else
 			write(1, &c, 1);
 		i = 0;
@@ -43,7 +43,6 @@ int	main(void)
 	sa.sa_sigaction = handler;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
-	write(1, "Server is running...\n", 21);
 	while (1)
 		pause();
 	return (0);
