@@ -30,7 +30,7 @@ void	handler(int signal, siginfo_t *info, void *context)
 		i = 0;
 		c = 0;
 	}
-	usleep(69);
+	usleep(1);
 	kill(info->si_pid, SIGUSR1);
 }
 

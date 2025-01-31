@@ -13,6 +13,9 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 
+# define MAX_PID 4194304
+# define MIN_PID 0
+
 # include "../libft/include/libft.h"
 # include <signal.h>
 # include <stdbool.h>

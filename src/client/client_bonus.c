@@ -16,14 +16,10 @@ volatile int	g_ack = 0;
 
 void	ack_handler(int signum)
 {
-	(void)signum;
-	g_ack = 1;
-}
-
-void	final_ack_handler(int signum)
-{
-	if (signum == SIGUSR2)
-		write(1, "Message received by server!\n", 28);
+	if (signum == SIGUSR1)
+		g_ack = 1;
+	else if (signum == SIGUSR2)
+		g_ack = 2;
 }
 
 void	send_signal(int pid, unsigned char c)
@@ -39,7 +35,7 @@ void	send_signal(int pid, unsigned char c)
 		else
 			kill(pid, SIGUSR2);
 		while (!g_ack)
-			usleep(69);
+			usleep(1);
 		i++;
 	}
 }
@@ -51,19 +47,18 @@ int	main(int argc, char *argv[])
 	const char	*str;
 
 	if (argc != 3)
-	{
-		ft_printf("Usage: ./client [PID] [STRING]\n");
-		return (1);
-	}
-	pid = ft_atoi(argv[1]);
+		return (write(1, "Usage: ./client [PID] [STRING]\n", 31), 1);
+	pid = atoi(argv[1]);
+	if (pid <= MIN_PID || pid >= MAX_PID)
+		return (write(1, "Error: Invalid PID.\n", 20), 1);
 	str = argv[2];
 	signal(SIGUSR1, ack_handler);
-	signal(SIGUSR2, final_ack_handler);
+	signal(SIGUSR2, ack_handler);
 	i = 0;
 	while (str[i])
 		send_signal(pid, str[i++]);
 	send_signal(pid, '\0');
-	while (!g_ack)
-		usleep(50);
-	return (0);
+	while (g_ack != 2)
+		usleep(1);
+	return (write(1, "Message received by server!\n", 28), 0);
 }

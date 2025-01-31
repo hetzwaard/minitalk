@@ -33,7 +33,7 @@ void	send_signal(int pid, unsigned char c)
 		else
 			kill(pid, SIGUSR2);
 		while (!g_ack)
-			usleep(69);
+			usleep(1);
 		i++;
 	}
 }

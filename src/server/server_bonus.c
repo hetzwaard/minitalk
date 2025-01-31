@@ -33,7 +33,7 @@ void	handler(int signal, siginfo_t *info, void *context)
 		i = 0;
 		c = 0;
 	}
-	usleep(50);
+	usleep(1);
 	kill(info->si_pid, SIGUSR1);
 }
 
@@ -46,7 +46,6 @@ int	main(void)
 	sa.sa_sigaction = handler;
 	sigaction(SIGUSR1, &sa, NULL);
 	sigaction(SIGUSR2, &sa, NULL);
-	write(1, "Server is running...\n", 21);
 	while (1)
 		pause();
 	return (0);
