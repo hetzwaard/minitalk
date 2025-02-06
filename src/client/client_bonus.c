@@ -6,7 +6,7 @@
 /*   By: mahkilic <mahkilic@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/30 12:35:14 by mahkilic      #+#    #+#                 */
-/*   Updated: 2025/01/30 12:35:14 by mahkilic      ########   odam.nl         */
+/*   Updated: 2025/02/06 18:03:26 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 volatile int	g_ack = 0;
 
-void	ack_handler(int signum)
+void	roger_that(int signum)
 {
 	if (signum == SIGUSR1)
 		g_ack = 1;
@@ -52,13 +52,13 @@ int	main(int argc, char *argv[])
 	if (pid <= MIN_PID || pid >= MAX_PID)
 		return (write(1, "Error: Invalid PID.\n", 20), 1);
 	str = argv[2];
-	signal(SIGUSR1, ack_handler);
-	signal(SIGUSR2, ack_handler);
+	signal(SIGUSR1, roger_that);
+	signal(SIGUSR2, roger_that);
 	i = 0;
 	while (str[i])
 		send_signal(pid, str[i++]);
 	send_signal(pid, '\0');
 	while (g_ack != 2)
 		usleep(1);
-	return (write(1, "Message received by server!\n", 28), 0);
+	return (write(1, "Mission accomplished.\n", 28), 0);
 }
