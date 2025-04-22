@@ -8,7 +8,7 @@
 
 ## Features
 
-- **Signal-Based Communication:** Uses `SIGUSR1` (representing 1) and `SIGUSR2` (representing 0) to send each bit of a character.
+- **Signal-Based Communication:** Uses `SIGUSR1` and `SIGUSR2` to send each bit of a character.
 - **Client-Server Model:**
   - **Server:** Starts, displays its PID, and waits for signals to decode and print messages.
   - **Client:** Sends a message to the server by converting each character into a series of signals.
