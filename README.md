@@ -51,7 +51,7 @@
 
 ## Bonus Features
 
-- **Acknowledgment:** The server sends a signal back to the client to confirm message receipt (implemented in `server_bonus.c` and `client_bonus.c`).
+- **Acknowledgment:** The server sends a signal back to the client to confirm message receipt.
 - **Unicode Support:** The system can handle extended characters for broader compatibility.
 
 ---
