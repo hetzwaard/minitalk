@@ -60,5 +60,5 @@ int	main(int argc, char *argv[])
 	send_signal(pid, '\0');
 	while (g_ack != 2)
 		usleep(1);
-	return (write(1, "Mission accomplished.\n", 28), 0);
+	return (write(1, "Mission accomplished.\n", 23), 0);
 }
