@@ -2,7 +2,7 @@
 
 ## Overview
 
-The **Minitalk** project is a client-server communication system that uses UNIX signals to transmit messages. The objective is to send strings from a client to a server, one character at a time, using `SIGUSR1` and `SIGUSR2` signals. The server receives and decodes these signals to reconstruct and display the message.
+**Minitalk** is a client-server communication system that uses UNIX signals to transmit messages. The objective is to send strings from a client to a server, one character at a time, using `SIGUSR1` and `SIGUSR2` signals. The server receives and decodes these signals to reconstruct and display the message.
 
 ---
 
