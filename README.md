@@ -142,7 +142,7 @@ Test the program with various inputs:
 ```bash
 ./client 12345 "Test message"
 ./client 12345 ""  # Empty message
-./client 12345 "Hello 😊"  # Unicode characters (bonus)
+./client 12345 "😊"  # Unicode characters (bonus)
 ```
 
 To simulate edge cases:
