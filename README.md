@@ -84,7 +84,7 @@ The **Minitalk** project is a client-server communication system that uses UNIX 
 1. Clone the repository and initialize the `libft` submodule:
 
 ```bash
-git clone --recurse-submodules [repository-url]
+git clone --recurse-submodules https://github.com/hetzwaard/minitalk.git
 ```
 
 Alternatively, if you already cloned the repository:
@@ -116,7 +116,7 @@ make bonus
 ./server
 ```
 
-Output: `Server PID: 12345`
+Example Output: `Server PID: 12345`
 
 2. In another terminal, run the client with the server’s PID and a message:
 
@@ -155,7 +155,6 @@ To simulate edge cases:
 ## Notes
 
 - The program assumes valid input (e.g., a correct PID and a string message).
-- Use `usleep` to prevent signal overload on the server.
 - The server reconstructs characters by counting 8 bits and stops when it receives a null character (`\0`).
 - Ensure the `libft` submodule is properly initialized before compilation.
 
