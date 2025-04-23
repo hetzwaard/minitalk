@@ -6,43 +6,70 @@
 /*   By: mahkilic <mahkilic@student.42.fr>            +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2025/01/26 08:02:09 by mahkilic      #+#    #+#                 */
-/*   Updated: 2025/01/29 14:50:34 by mahkilic      ########   odam.nl         */
+/*   Updated: 2025/04/24 00:12:20 by mahkilic      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minitalk.h"
 
-void	handler(int signal, siginfo_t *info, void *context)
+static int	g_current_pid = 0;
+
+void	print_char(unsigned char c)
 {
-	static unsigned char	c = 0;
-	static int				i = 0;
+	if (c == '\0')
+		write(1, "\n", 1);
+	else
+		write(1, &c, 1);
+}
+
+void	handle_bit(int signal, siginfo_t *info, void *context)
+{
+	static int				bit_count = 0;
+	static unsigned char	char_acc = 0;
 
 	(void)context;
-	if (signal == SIGUSR1)
-		c |= (1 << i);
-	i++;
-	if (i == 8)
+	if (g_current_pid == 0)
+		g_current_pid = info->si_pid;
+	if (info->si_pid != g_current_pid)
+		return ;
+	char_acc = char_acc << 1;
+	if (signal == SIGUSR2)
+		char_acc |= 1;
+	bit_count++;
+	kill(g_current_pid, SIGUSR1);
+	if (bit_count == 8)
 	{
-		if (c == '\0')
-			write(1, "\n", 1);
-		else
-			write(1, &c, 1);
-		i = 0;
-		c = 0;
+		print_char(char_acc);
+		if (char_acc == '\0')
+			g_current_pid = 0;
+		bit_count = 0;
+		char_acc = 0;
 	}
-	usleep(1);
-	kill(info->si_pid, SIGUSR1);
+}
+
+void	setup_signals(void)
+{
+	struct sigaction	sa;
+
+	sa.sa_sigaction = handle_bit;
+	sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	sigaddset(&sa.sa_mask, SIGUSR1);
+	sigaddset(&sa.sa_mask, SIGUSR2);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1
+		|| sigaction(SIGUSR2, &sa, NULL) == -1)
+	{
+		ft_putstr("Signal setup failed.\n");
+		exit(1);
+	}
 }
 
 int	main(void)
 {
-	struct sigaction	sa;
-
-	ft_printf("Server PID: %d\n", getpid());
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_sigaction = handler;
-	sigaction(SIGUSR1, &sa, NULL);
-	sigaction(SIGUSR2, &sa, NULL);
+	ft_putstr("Server PID: ");
+	ft_putnbr(getpid());
+	ft_putchar('\n');
+	setup_signals();
 	while (1)
 		pause();
 	return (0);
