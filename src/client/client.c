@@ -10,50 +10,57 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minitalk.h"
+#include "minitalk.h"
 
-void	send_signal(pid_t server_pid, int bit)
+volatile sig_atomic_t	g_signal_status = 0;
+
+void	handle_signal(int sig)
 {
-	if (bit == 0)
-		kill(server_pid, SIGUSR1);
-	else
-		kill(server_pid, SIGUSR2);
+	(void)sig;
+	g_signal_status = 1;
 }
 
-void	handle_input(pid_t server_pid, char *str)
+void	send_signal(int pid, char *str)
 {
-	int	i;
-	int	j;
+	int				i;
+	int				bit;
+	unsigned char	c;
 
 	i = 0;
-	while (str[i])
+	while (1)
 	{
-		j = 7;
-		while (j >= 0)
+		c = str[i];
+		bit = 8;
+		while (bit--)
 		{
-			send_signal(server_pid, (str[i] >> j) & 1);
-			
-			j--;
+			g_signal_status = 0;
+			if ((c >> bit) & 1)
+				kill(pid, SIGUSR2);
+			else
+				kill(pid, SIGUSR1);
+			while (g_signal_status != 1)
+				usleep(1);
 		}
+		if (c == '\0')
+			break ;
 		i++;
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	pid_t	server_pid;
+	struct sigaction	sa;
 
 	if (argc != 3)
 	{
-		ft_printf("Error: Usage: %s [PID] [MESSAGE]\n", argv[0]);
+		ft_printf("Usage: ./client [server PID] [message]\n");
 		return (1);
 	}
-	server_pid = ft_atoi(argv[1]);
-	if (server_pid <= 0)
-	{
-		ft_printf("Error: Invalid PID\n");
+	sa.sa_handler = handle_signal;
+	sa.sa_flags = SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
 		return (1);
-	}
-	handle_input(server_pid, argv[2]);
+	send_signal(ft_atoi(argv[1]), argv[2]);
 	return (0);
 }

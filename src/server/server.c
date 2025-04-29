@@ -10,34 +10,49 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minitalk.h"
+#include "minitalk.h"
 
-void	receive_signal(int signal)
+void	handle_signal(int sig, siginfo_t *info, void *context)
 {
-	static int	bit_count = 0;
-	static char	current_char = 0;
+	static int				g_bit_count = 0;
+	static unsigned char	g_char = 0;
+	static pid_t			g_client_pid = 0;
 
-	if (signal == SIGUSR1 || signal == SIGUSR2)
+	(void)context;
+	if (g_client_pid == 0)
+		g_client_pid = info->si_pid;
+	g_char = g_char << 1;
+	if (sig == SIGUSR2)
+		g_char = g_char | 1;
+	g_bit_count++;
+	kill(g_client_pid, SIGUSR1);
+	if (g_bit_count == 8)
 	{
-		if (signal == SIGUSR1)
-			current_char = current_char << 1;
-		else if (signal == SIGUSR2)
-			current_char = (current_char << 1) | 1;
-		bit_count++;
-		if (bit_count == 8)
+		write(1, &g_char, 1);
+		if (g_char == '\0')
 		{
-			write(1, &current_char, 1);
-			current_char = 0;
-			bit_count = 0;
+			write(1, "\n", 1);
+			g_client_pid = 0;
 		}
+		g_bit_count = 0;
+		g_char = 0;
 	}
 }
 
 int	main(void)
 {
+	struct sigaction	sa;
+
 	ft_printf("PID: %d\n", getpid());
-	signal(SIGUSR1, receive_signal);
-	signal(SIGUSR2, receive_signal);
+	sa.sa_sigaction = handle_signal;
+	sa.sa_flags = SA_SIGINFO | SA_RESTART;
+	sigemptyset(&sa.sa_mask);
+	sigaddset(&sa.sa_mask, SIGUSR1);
+	sigaddset(&sa.sa_mask, SIGUSR2);
+	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		return (1);
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
+		return (1);
 	while (1)
 		pause();
 	return (0);
