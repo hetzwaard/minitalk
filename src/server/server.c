@@ -31,7 +31,6 @@ void	receive_signal(int signal)
 			bit_count = 0;
 		}
 	}
-	
 }
 
 int	main(void)

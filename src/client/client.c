@@ -32,7 +32,7 @@ void	handle_input(pid_t server_pid, char *str)
 		while (j >= 0)
 		{
 			send_signal(server_pid, (str[i] >> j) & 1);
-			usleep(1000);
+			
 			j--;
 		}
 		i++;
