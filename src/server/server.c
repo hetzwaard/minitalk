@@ -12,64 +12,33 @@
 
 #include "../../include/minitalk.h"
 
-static int	g_current_pid = 0;
-
-void	print_char(unsigned char c)
+void	receive_signal(int signal)
 {
-	if (c == '\0')
-		write(1, "\n", 1);
-	else
-		write(1, &c, 1);
-}
+	static int	bit_count = 0;
+	static char	current_char = 0;
 
-void	handle_bit(int signal, siginfo_t *info, void *context)
-{
-	static int				bit_count = 0;
-	static unsigned char	char_acc = 0;
-
-	(void)context;
-	if (g_current_pid == 0)
-		g_current_pid = info->si_pid;
-	if (info->si_pid != g_current_pid)
-		return ;
-	char_acc = char_acc << 1;
-	if (signal == SIGUSR2)
-		char_acc |= 1;
-	bit_count++;
-	kill(g_current_pid, SIGUSR1);
-	if (bit_count == 8)
+	if (signal == SIGUSR1 || signal == SIGUSR2)
 	{
-		print_char(char_acc);
-		if (char_acc == '\0')
-			g_current_pid = 0;
-		bit_count = 0;
-		char_acc = 0;
+		if (signal == SIGUSR1)
+			current_char = current_char << 1;
+		else if (signal == SIGUSR2)
+			current_char = (current_char << 1) | 1;
+		bit_count++;
+		if (bit_count == 8)
+		{
+			write(1, &current_char, 1);
+			current_char = 0;
+			bit_count = 0;
+		}
 	}
-}
-
-void	setup_signals(void)
-{
-	struct sigaction	sa;
-
-	sa.sa_sigaction = handle_bit;
-	sa.sa_flags = SA_SIGINFO | SA_RESTART;
-	sigemptyset(&sa.sa_mask);
-	sigaddset(&sa.sa_mask, SIGUSR1);
-	sigaddset(&sa.sa_mask, SIGUSR2);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1
-		|| sigaction(SIGUSR2, &sa, NULL) == -1)
-	{
-		ft_putstr("Signal setup failed.\n");
-		exit(1);
-	}
+	
 }
 
 int	main(void)
 {
-	ft_putstr("Server PID: ");
-	ft_putnbr(getpid());
-	ft_putchar('\n');
-	setup_signals();
+	ft_printf("PID: %d\n", getpid());
+	signal(SIGUSR1, receive_signal);
+	signal(SIGUSR2, receive_signal);
 	while (1)
 		pause();
 	return (0);

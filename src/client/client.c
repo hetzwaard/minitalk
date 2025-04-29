@@ -12,69 +12,48 @@
 
 #include "../../include/minitalk.h"
 
-static volatile sig_atomic_t	g_ack_received = 0;
-
-void	ack_handler(int sig)
+void	send_signal(pid_t server_pid, int bit)
 {
-	(void)sig;
-	g_ack_received = 1;
+	if (bit == 0)
+		kill(server_pid, SIGUSR1);
+	else
+		kill(server_pid, SIGUSR2);
 }
 
-void	send_char_bits(int pid, unsigned char c)
-{
-	int	bit;
-
-	bit = 8;
-	while (bit--)
-	{
-		g_ack_received = 0;
-		if ((c >> bit) & 1)
-			kill(pid, SIGUSR2);
-		else
-			kill(pid, SIGUSR1);
-		while (!g_ack_received)
-			usleep(100);
-	}
-}
-
-void	send_message(int pid, const char *msg)
+void	handle_input(pid_t server_pid, char *str)
 {
 	int	i;
+	int	j;
 
 	i = 0;
-	while (1)
+	while (str[i])
 	{
-		send_char_bits(pid, msg[i]);
-		if (msg[i] == '\0')
-			break ;
+		j = 7;
+		while (j >= 0)
+		{
+			send_signal(server_pid, (str[i] >> j) & 1);
+			usleep(1000);
+			j--;
+		}
 		i++;
-	}
-}
-
-void	setup_signal_handler(void)
-{
-	struct sigaction	sa;
-
-	sa.sa_handler = ack_handler;
-	sa.sa_flags = SA_RESTART;
-	sigemptyset(&sa.sa_mask);
-	if (sigaction(SIGUSR1, &sa, NULL) == -1)
-	{
-		ft_putstr("Client signal handler failed.\n");
-		exit(1);
 	}
 }
 
 int	main(int argc, char **argv)
 {
-	int	pid;
+	pid_t	server_pid;
 
 	if (argc != 3)
-		return (write(1, "Usage: ./client [PID] [MESSAGE]\n", 33), 1);
-	pid = ft_atoi(argv[1]);
-	if (pid <= MIN_PID || pid >= MAX_PID)
-		return (write(1, "Error: Invalid PID.\n", 20), 1);
-	setup_signal_handler();
-	send_message(pid, argv[2]);
+	{
+		ft_printf("Error: Usage: %s [PID] [MESSAGE]\n", argv[0]);
+		return (1);
+	}
+	server_pid = ft_atoi(argv[1]);
+	if (server_pid <= 0)
+	{
+		ft_printf("Error: Invalid PID\n");
+		return (1);
+	}
+	handle_input(server_pid, argv[2]);
 	return (0);
 }
