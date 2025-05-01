@@ -10,32 +10,34 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minitalk.h"
+// we define struct sigaction sa to get defination of SIGUSR1 and SIGUSR2.
 
-void	recieve_signal(int sig, siginfo_t *info, void *context)
+#include "../../include/minitalk.h"
+
+void	recieve_signal(int signal, siginfo_t *info, void *context)
 {
-	static int				g_bit_count = 0;
-	static unsigned char	g_char = 0;
-	static pid_t			g_client_pid = 0;
+	static int				bit_count = 0;
+	static unsigned char	current_char = 0;
+	static pid_t			client_pid = 0;
 
 	(void)context;
-	if (g_client_pid == 0)
-		g_client_pid = info->si_pid;
-	g_char = g_char << 1;
-	if (sig == SIGUSR2)
-		g_char = g_char | 1;
-	g_bit_count++;
-	kill(g_client_pid, SIGUSR1);
-	if (g_bit_count == 8)
+	if (client_pid == 0)
+		client_pid = info->si_pid;
+	current_char = current_char << 1;
+	if (signal == SIGUSR2)
+		current_char = current_char | 1;
+	bit_count++;
+	kill(client_pid, SIGUSR1);
+	if (bit_count == 8)
 	{
-		write(1, &g_char, 1);
-		if (g_char == '\0')
+		write(1, &current_char, 1);
+		if (current_char == '\0')
 		{
 			write(1, "\n", 1);
-			g_client_pid = 0;
+			client_pid = 0;
 		}
-		g_bit_count = 0;
-		g_char = 0;
+		bit_count = 0;
+		current_char = 0;
 	}
 }
 
