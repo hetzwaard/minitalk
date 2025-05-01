@@ -12,12 +12,12 @@
 
 #include "minitalk.h"
 
-volatile sig_atomic_t	g_signal_status = 0;
+static int	g_ack = 0;
 
-void	handle_signal(int sig)
+void	g_acknowledge(int sig)
 {
 	(void)sig;
-	g_signal_status = 1;
+	g_ack = 1;
 }
 
 void	send_signal(int pid, char *str)
@@ -33,12 +33,12 @@ void	send_signal(int pid, char *str)
 		bit = 8;
 		while (bit--)
 		{
-			g_signal_status = 0;
+			g_ack = 0;
 			if ((c >> bit) & 1)
 				kill(pid, SIGUSR2);
 			else
 				kill(pid, SIGUSR1);
-			while (g_signal_status != 1)
+			while (g_ack != 1)
 				usleep(1);
 		}
 		if (c == '\0')
@@ -56,10 +56,11 @@ int	main(int argc, char **argv)
 		ft_printf("Usage: ./client [server PID] [message]\n");
 		return (1);
 	}
-	sa.sa_handler = handle_signal;
+	sa.sa_handler = g_acknowledge;
 	sa.sa_flags = SA_RESTART;
-	sigemptyset(&sa.sa_mask);
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
+		return (1);
+	if (sigaction(SIGUSR2, &sa, NULL) == -1)
 		return (1);
 	send_signal(ft_atoi(argv[1]), argv[2]);
 	return (0);

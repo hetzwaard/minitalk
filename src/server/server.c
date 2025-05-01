@@ -12,7 +12,7 @@
 
 #include "minitalk.h"
 
-void	handle_signal(int sig, siginfo_t *info, void *context)
+void	recieve_signal(int sig, siginfo_t *info, void *context)
 {
 	static int				g_bit_count = 0;
 	static unsigned char	g_char = 0;
@@ -44,9 +44,7 @@ int	main(void)
 	struct sigaction	sa;
 
 	ft_printf("PID: %d\n", getpid());
-	sa.sa_sigaction = handle_signal;
-	sa.sa_flags = SA_SIGINFO | SA_RESTART;
-	sigemptyset(&sa.sa_mask);
+	sa.sa_sigaction = recieve_signal;
 	sigaddset(&sa.sa_mask, SIGUSR1);
 	sigaddset(&sa.sa_mask, SIGUSR2);
 	if (sigaction(SIGUSR1, &sa, NULL) == -1)
