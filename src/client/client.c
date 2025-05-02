@@ -10,11 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// g_ack (global integer for acknowledge) is to create the handshake.
-// g_ack waits for "1", and when it gets it, it keeps continue sending bits.
-// sa.sa_handller is waiting for a signal and when it recieves it runs g_ack.
-// SA_RESTARTS is resetting instead of failing, while using pause();
-
 #include "../../include/minitalk.h"
 
 static int	g_ack = 0;
@@ -44,7 +39,7 @@ void	send_signal(int pid, char *str)
 			else
 				kill(pid, SIGUSR1);
 			while (g_ack != 1)
-				pause();
+				usleep(1);
 		}
 		if (c == '\0')
 			break ;

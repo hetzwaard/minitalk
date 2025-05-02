@@ -10,8 +10,6 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// we define struct sigaction sa to get defination of SIGUSR1 and SIGUSR2.
-
 #include "../../include/minitalk.h"
 
 void	recieve_signal(int signal, siginfo_t *info, void *context)

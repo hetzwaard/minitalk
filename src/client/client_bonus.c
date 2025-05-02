@@ -39,7 +39,7 @@ void	send_signal(int pid, char *str)
 			else
 				kill(pid, SIGUSR1);
 			while (g_ack != 1)
-				pause();
+				usleep(1);
 		}
 		if (c == '\0')
 			break ;
