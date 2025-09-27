@@ -163,11 +163,3 @@ To simulate edge cases:
 ## Acknowledgments
 
 Special thanks to the 42 Network, Codam College (42 Amsterdam), and its community for inspiring this project.
-
----
-
-## Contact
-
-For questions or suggestions, feel free to reach out:
-
-- Email: me@mahmutkilic.nl
