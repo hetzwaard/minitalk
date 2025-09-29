@@ -84,7 +84,7 @@
 1. Clone the repository and initialize the `libft` submodule:
 
 ```bash
-git clone --recurse-submodules https://github.com/hetzwaard/minitalk.git
+git clone --recursive https://github.com/hetzwaard/minitalk.git
 ```
 
 Alternatively, if you already cloned the repository:
@@ -125,13 +125,6 @@ Example Output: `Server PID: 12345`
 ```
 
 The server will print: `Hello, World!`
-
-3. To test the bonus features, use:
-
-```bash
-./server_bonus
-./client_bonus 12345 "Hello, World!"
-```
 
 ---
 
